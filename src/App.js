@@ -95,7 +95,7 @@ function App() {
   },[nonce])
 
   useEffect(()=>{
-    const txstr = "from " + from + " to " + to + " amount : " + amount + "BTC";
+    const txstr = "from " + from + " to " + to + " amount : " + amount + "BTC" + " sign : " + from + "'s sign";
     setTx(txstr);
   },[from, to, amount])
 
