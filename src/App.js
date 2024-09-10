@@ -26,7 +26,7 @@ function App() {
   const [to, setTo] = useState("");
   const [amount, setAmount] = useState("");
   // 지난 block 해시값
-  const [prevBlockHash, setPrevBlockHash] = useState("");
+  const [prevBlockHash, setPrevBlockHash] = useState("0x0");
   // 현재 block 내용
   const [block, setBlock] = useState({
     prevBlockHash: prevBlockHash,
@@ -79,6 +79,7 @@ function App() {
     // if (hashNumber32bit < 0x0FFFFFFF) {
     if (hashNumber32bit < difficultyNumber) {
       setPrevBlockHash(hashNumber32bitHexString);
+      block.transactions.push("from 0x to miner amount : 50BTC")
       setBlocks([...blocks, block])
       setBlockNumber(blockNumber+1);
       setNonce(0);
@@ -93,7 +94,7 @@ function App() {
   },[nonce])
 
   useEffect(()=>{
-    const txstr = "from " + from + " to " + to + " amount : " + amount;
+    const txstr = "from " + from + " to " + to + " amount : " + amount + "BTC";
     setTx(txstr);
   },[from, to, amount])
 
