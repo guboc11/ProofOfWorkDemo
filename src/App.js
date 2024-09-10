@@ -2,6 +2,7 @@ import './App.css';
 import { useState, useEffect, useRef } from 'react';
 import Hashes from 'jshashes';
 import Block from './Block';
+import Tx from './Tx';
 
 function sha1To32BitHex(str) {
   var SHA1 = new Hashes.SHA1
@@ -101,83 +102,56 @@ function App() {
 
   return (
     <div>
-      <div>
-        <h1 className='text-2xl'>난이도 선택</h1>
-        <select className='ml-4 border-black border-2 p-3' onChange={(e)=>{setDifficultyNumber(parseInt(e.target.value, 16))}}>
+      <div className='p-2 mb-4'>
+        <h1 className='text-3xl my-auto'>난이도 선택(숫자가 낮을 수록 높은 난이도)</h1>
+        <select className='border-black border-2 p-3' onChange={(e)=>{setDifficultyNumber(parseInt(e.target.value, 16))}}>
           <option value="0x0FFFFFFF">0x0FFFFFFF</option>
           <option value="0x0bFFFFFF">0x0bFFFFFF</option>
           <option value="0x07FFFFFF">0x07FFFFFF</option>
           <option value="0x03FFFFFF">0x03FFFFFF</option>
           <option value="0x00FFFFFF">0x00FFFFFF</option>
         </select>
+      </div>
 
+      <div className='p-2'>
+        <h1 className='text-3xl mb-3'>생성된 Block & Transaction 정보</h1>
+        <div className='border-black border-2 flex mb-3'>
+          <div className='w-[350px]'>
+            <div className='flex justify-center'>
+              <h1 className='text-2xl'>현재 블록 (Block Number :{block.blockNumber})</h1>
+            </div>
+            <div className='p-4 flex justify-center'>
+              <Block block={block} isCurrentBlock={true}></Block>
+            </div>
+          </div>
+          <div className='w-[220px] mr-10'>
+            <div className='flex justify-center'>
+              <h1 className='text-2xl'>사용한 Hash값 모음</h1>
+            </div>
+            <div className='h-80 border-black border-2 m-2 overflow-y-scroll pl-2'>
+              {blockHashArray.map((blockHash, index) => {
+                if (blockHash.isBlockAnswer == false) {
+                  return <div className='flex justify-center' key={index}>{blockHash.blockHash}</div>
+                } else {
+                  return <div className='text-red-500 flex justify-center' key={index}>{blockHash.blockHash}</div>
+                }
+              }
+              )}
+            </div>
+          </div>
 
-      </div>
-      <div>
-        <h1 className='text-2xl'>사용한 hash값 모음</h1>
-      </div>
-      <div className='h-80 border-black border-2 m-2 overflow-y-scroll'>
-        {blockHashArray.map((blockHash, index) => {
-          if (blockHash.isBlockAnswer == false) {
-            return <div key={index}>{blockHash.blockHash}</div>
-          } else {
-            return <div className='text-red-500' key={index}>{blockHash.blockHash}</div>
-          }
-        }
-        )}
-      </div>
-      <div>
-        <h1 className='text-2xl'>Transaction Pool</h1>
-      </div>
-      <div>
-        <textarea 
-          className='border-2 border-black' 
-          placeholder='From' 
-          value={from}
-          onChange={(e)=>{setFrom(e.target.value)}}>
-        </textarea>
-        <textarea 
-          className='border-2 border-black' 
-          placeholder='To' 
-          value={to}
-          onChange={(e)=>{setTo(e.target.value)}}>
-        </textarea>
-        <textarea 
-          className='border-2 border-black' 
-          placeholder='Amount' 
-          value={amount}
-          onChange={(e)=>{setAmount(e.target.value)}}>
-        </textarea>
-        <button 
-          className='p-2 border-blue-500 border-2 rounded-xl' 
-          onClick={()=>{
-            setTransactionPool((prevTxs)=>{
-              const newTxs = [...prevTxs, tx];
-              setTx("");
-              setFrom("");
-              setTo("");
-              setAmount("");
-              return newTxs;
-            });
-            console.log("newTxs",transactionPool)
-          }}>트랜잭션 추가하기
-        </button>
-        <div>
-          {transactionPool.map((tx, index)=>{
-            return <p>{tx}</p>
-          })}
+          <Tx from={from} to={to} amount={amount} tx={tx} transactionPool={transactionPool}
+            setFrom={setFrom} setTo={setTo} setAmount={setAmount} setTx={setTx} setTransactionPool={setTransactionPool}
+          />
+        </div>
+        <h1 className='text-3xl mb-2'>지금까지 만들어진 블록</h1>
+        <div className='min-h-48 border-black border-2 overflow-x-scroll flex'>
+          {blocks.map((block, index) => (
+            <Block block={block}></Block>
+          ))}
         </div>
       </div>
-      <div>
-        <h1 className='text-2xl'>생성된 Block 모음</h1>
-      </div>
-      <div className='border-black border-2 m-2 overflow-x-scroll flex'>
-        {blocks.map((block, index) => (
-          <Block block={block}></Block>
-        ))}
-        <Block block={block} isCurrentBlock={true}></Block>
-      </div>
-  </div>
+    </div>
   );
 }
 
