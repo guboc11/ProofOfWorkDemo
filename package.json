@@ -18,7 +18,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "deploy": "aws s3 sync ./dist s3://proofofworkdemo  --profile=tw",
+    "deploy": "aws s3 sync ./biuld s3://proofofworkdemo  --profile=tw",
     "invalidate": "aws cloudfront create-invalidation --profile=tw --distribution-id E2PERKDK1F719H --paths /*"
   },
   "eslintConfig": {
